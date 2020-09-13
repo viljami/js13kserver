@@ -1,27 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Rock, Paper, Scissors</title>
+<title>RTC</title>
 <meta charset="UTF-8">
 </head>
 <body>
 
-<div style="text-align:center">
-    <h1 id="message"></h1>
-    <div>
-        <button>Rock</button>
-        <button>Paper</button>
-        <button>Scissors</button>
-    </div>
-    <div id="score"></div>
-    <p>
-        <a href="/stat">Statistics</a>
-    </p>
-</div>
-
 <script src="/socket.io/socket.io.js"></script>
 <script src="/shared.js"></script>
 <script src="/client.js"></script>
+
+<div id="app">
+    <h1>Chat P2P</h1>
+
+    <p>
+        <a id="my-link" target="_blank"></a>
+    </p>
+
+    <p>
+        <input id="message">
+    </p>
+
+    <p id="remote"></p>
+</div>
+<script>
+    const noop = () => void 0;
+
+    window.addEventListener('load', function load() {
+        window.removeEventListener('load', load);
+
+        const master = location.hash.split('#')[1];
+        console.log(master);
+
+        const myLink = document.getElementById('my-link');
+        const remote = document.getElementById('remote');
+        const message = document.getElementById('message');
+
+        const onMessage = (id, { data }) => {
+            remote.innerText = data;
+        };
+
+        const createMasterLink = id => {
+            myLink.innerText = id;
+            myLink.href = `${location.href}#${id}`;
+        };
+
+        const connectToMaster = () => pc.connect(master);
+
+        const pc = initPC(
+            master ? connectToMaster : createMasterLink,
+            (id) => console.log('Client joined', id),
+            (id) => console.log('Client disconnected', id),
+            onMessage,
+            console.error
+        );
+
+        message.addEventListener('change', () => {
+            pc.sendAll(message.value);
+        });
+    });
+</script>
 
 </body>
 </html>
