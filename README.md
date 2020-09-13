@@ -1,6 +1,9 @@
-# js13kgames.com Game Server
+# js13kgames.com Game Server (Peer to peer edition)
 
-Game server for the [js13kGames Competition](http://js13kgames.com/).
+Build on game server for the [js13kGames Competition](http://js13kgames.com/).
+
+Simple example on p2p. Any suggestions and improvement ideas are very welcome.
+
 
 ## Install
 
